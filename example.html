@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Simple Vue-like MVVM</title>
+  <style type="text/css">
+    .active{
+      color: #4a4a4a;
+    }
+
+    .active-class,.active-class-changed {
+      color: green;
+    }
+    .active-class-changed:after {
+      content: 'I changed';
+    }
+    .error-class {
+      color: red;
+    }
+
+  </style>
+  <script src="./index.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ title }}</h1>
+    <h3 class="cls" :id="name">This is the two way binding: {{ name }}</h3>
+    <span>Change the model here: </span><input v-model="name">
+
+    <p>
+      {{"The title is: " + title }} , name is: {{ name }}
+    </p>
+
+    <p>
+      Computed data: {{computedData}}
+    </p>
+
+    <p>
+      v-html: inserted a string html
+       <span v-html="test"></span>
+    </p>
+
+    <h3 class="static" v-show="isActive">
+      v-show isActive is true, so you see me
+    </h3>
+
+    <h3 v-if="isActive">
+      v-if isActive is true, you can see me
+    </h3>
+
+    Looping through the items:
+    <ul>
+      <li v-for="item in items">
+        item: {{item.id}}, 
+        text:
+        <span v-for="t in item.text">
+          {{t.txt}}
+        </span>
+      </li>
+    </ul>
+
+    <p v-bind:class="[hasError ? errorClass: activeClass]">
+      You will see me in green if no error, red if has error.
+    </p>
+
+    <h3 style="margin-left:25px" v-bind:style="{ color: activeColor, font-size: fontSize }">
+      Events:
+    </h3>
+
+    <p>
+      By clicking the button below, it will change multiple things:
+      <br />
+      Change name, toggle isActive, change fontSize and activeClass
+      <input type="button" value="Change!" v-on:click="resetInput">
+    </p>
+
+    <p>
+      Other buttons:
+      <input type="button" value="Add An Item" @click="addItem">
+      <input type="button" value="Add Text At Second Item" v-on:click="addTextAtSecondItem">
+      <input type="button" value="toggle error" @click="toggleError">
+    </p>
+  </div>
+
+  <script>
+    var vm = new MVVM({
+      el      : '#app',
+      data    : {
+        name       : 'This is a testing app',
+        title      : 'Hello',
+        test       : '<button>A button</button>',
+        items      : [
+          {
+            id: '0',
+            text: [
+              {txt: 'start'}, {txt: ',10000,'}, {txt: 'end'},
+            ]
+          },
+          {
+            id: '1',
+            text: [
+              {txt: 'start'}, {txt: ',10001,'}, {txt: 'end'},
+            ]
+          },
+          {
+            id: '2', text: [
+              {txt: 'start'}, {txt: ',10002,'}, {txt: 'end'},
+            ]
+          },
+        ],
+        isActive   : true,
+        hasError   : false,
+        activeColor: 'blue',
+        fontSize   : '18px',
+        activeClass: 'active-class',
+        errorClass : 'error-class',
+      },
+      computed: {
+        computedData: function () {
+          return this.title + ', ' + this.name;
+        },
+      },
+      methods : {
+        resetInput: function () {
+          this.name = 'reset input';
+          this.test = '<input type="date">';
+          this.isActive = !this.isActive;
+          this.fontSize = '28px';
+          this.activeClass = 'active-class-changed';
+        },
+        addItem: function () {
+          this.items.push({id: 'push', text: [{txt: 'push'}, {txt: ',11111,'}, {txt: 'push'}]});
+        },
+        addTextAtSecondItem: function () {
+          if (this.items.length >= 2) {
+            this.items[1].text.unshift({txt: 'I am added! '});
+          }
+        },
+        toggleError: function() {
+          this.hasError = !this.hasError;
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
