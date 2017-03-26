@@ -40,4 +40,6 @@ http://www.lucaongaro.eu/blog/2012/12/02/easy-two-way-data-binding-in-javascript
 
 https://github.com/DMQ/mvvm
 
+http://v1.vuejs.org/guide/reactivity.html
+
 https://vuejs.org/v2/guide/reactivity.html
